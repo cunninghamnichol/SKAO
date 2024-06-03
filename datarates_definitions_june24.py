@@ -43,9 +43,23 @@ def contimage_size_low(station_diameter,max_baseline_length,n_pols,n_products,nu
 
 
 def pss(assumed_TB,pss_beams):
-    print('PSS',assumed_TB)
-    assumed_pss=assumed_TB
+    if assumed_TB>0:
+        print('PSS',assumed_TB)
+        assumed_pss=assumed_TB
+    else: #PSS
+        #assume 50% of the 1000 detections will be sent?
+        n_det=0.5
+        data_packets=6 #minute chunks
+        number_hours=4
+        dp=60/data_packets*number_hours
+        datasize_pss=0.0839*100 *pss_beams # Gb/sdatasize packets for a given bin sent assuming 1000 detections processed
+        assumed_pss=datasize_pss*gbps_to_TB * dp * n_det #assuming data will be averaged over 10 minutes chunks so 40 in 4 hours
+        #assume 50% of the 1000 detections will be sent?
+
+        print('PSS',assumed_pss,'TB')
     return assumed_pss
+
+
 
 def pst(number_beams_pst,obs_time):
     datarate=2*1.33 
