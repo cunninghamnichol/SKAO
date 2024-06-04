@@ -60,11 +60,10 @@ def pss(assumed_TB,pss_beams):
     return assumed_pss
 
 
-
 def pst(number_beams_pst,obs_time):
     datarate=2*1.33 
-    assumed_pst=number_beams*datarate*obs_time*gbps_to_TB
-    print('PST=',round(assumed_PST,3),'TB')
+    assumed_pst=number_beams_pst*datarate*obs_time*gbps_to_TB
+    print('PST=',round(assumed_pst,3),'TB')
     return assumed_pst
 
 def transient_buffer(number_stations,number_beams,number_hours,events_per_hour):
@@ -73,8 +72,14 @@ def transient_buffer(number_stations,number_beams,number_hours,events_per_hour):
     print('Transient Buffersize',buffersize,'TB')
     return buffersize
 
-def dynamic_spectrum(number_beams,obs_time):
+def dynamic_spectrum(number_beams_pst,obs_time):
     datarate=2.048  #Gb/s
-    dynamic_TB=number_beams*datarate*obs_time*gbps_to_TB
+    dynamic_TB=number_beams_pst*datarate*obs_time*gbps_to_TB
     print('Dynamic spectrum',dynamic_TB,'TB')
     return dynamic_TB
+
+def flowthrough_mode(number_beams_pst,obs_time):
+    datarate=1.92 #Gb/s
+    flowthrough=number_beams_pst*datarate*obs_time*gbps_to_TB
+    print('Flowthrough=',flowthrough,'TB')
+    return flowthrough
