@@ -1,6 +1,7 @@
 #print(buffersize_gbps)
 gbps_to_PB=(1/(8000*1e3))
 gbps_to_TB=(1/(8000))
+import numpy as np
 def visibility_size_low(number_stations,n_chan,obs_time,int_time,freq_res):
     n_baselines=(number_stations*(number_stations+1))/2
     default_time_res=0.85
@@ -19,6 +20,7 @@ def visibility_size_low(number_stations,n_chan,obs_time,int_time,freq_res):
 
 def image_size_low(station_diameter,max_baseline_length,n_chan_image,n_pols,n_products,number_beams):
     image_size=7.5*(max_baseline_length/station_diameter)**2 * (32/8)
+    
     #Assuming 4 imaging products, image, model, residual, psf (1 channel only)
     final_cube= number_beams * n_pols * n_chan_image * image_size *(n_products-1) + (number_beams*image_size) #last part is the PSF which will be 1 channel
     sGB=(1024*1024*1024)
@@ -30,6 +32,7 @@ def image_size_low(station_diameter,max_baseline_length,n_chan_image,n_pols,n_pr
 
 def contimage_size_low(station_diameter,max_baseline_length,n_pols,n_products,number_beams):
     image_size=7.5*(max_baseline_length/station_diameter)**2 * (32/8)
+    #print(np.sqrt(image_size))
     #Assuming 4 imaging products, image, model, residual, psf ( all 1 channel only as an mfs image)
     n_chan_image=1
     #Assuming 11 images are made to be able to do spectral index?
@@ -78,8 +81,17 @@ def dynamic_spectrum(number_beams_pst,obs_time):
     print('Dynamic spectrum',dynamic_TB,'TB')
     return dynamic_TB
 
+
 def flowthrough_mode(number_beams_pst,obs_time):
     datarate=1.92 #Gb/s
     flowthrough=number_beams_pst*datarate*obs_time*gbps_to_TB
     print('Flowthrough=',flowthrough,'TB')
     return flowthrough
+
+def vlbi_mode(number_beams_pst,obs_time):
+    #Vlbi uses flowthrough mode 
+    datarate=1.92 #Gb/s
+    vlbi=number_beams_pst*datarate*obs_time*gbps_to_TB
+    print('VLBI=',vlbi,'TB')
+    return vlbi
+
